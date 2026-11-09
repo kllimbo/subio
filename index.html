@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f8fd">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Подписки">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Подписки — личный учёт</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="app-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="app-icon.svg">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <main class="phone-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" id="today-label"></p>
+        <h1 id="page-title">Подписки</h1>
+      </div>
+      <div class="top-actions">
+        <button class="icon-button" id="search-toggle" aria-label="Поиск" title="Поиск">⌕</button>
+        <button class="icon-button" id="settings-shortcut" aria-label="Настройки" title="Настройки">⚙</button>
+      </div>
+    </header>
+
+    <section id="search-row" class="search-row hidden">
+      <input id="search-input" type="search" placeholder="Найти подписку" autocomplete="off">
+      <button class="plain-button" id="clear-search">Очистить</button>
+    </section>
+
+    <section id="main-view" class="view">
+      <section class="monthly-card">
+        <div class="monthly-heading">
+          <div>
+            <span class="muted">Всего в месяц</span>
+            <strong id="monthly-total">—</strong>
+          </div>
+          <div class="currency-switch" role="group" aria-label="Валюта общей суммы">
+            <button data-currency="RUB" class="selected">₽</button>
+            <button data-currency="USD">$</button>
+          </div>
+        </div>
+        <div class="rate-note" id="rate-note"></div>
+      </section>
+
+      <div class="section-heading">
+        <div><h2>Мои подписки</h2><span id="subscription-count" class="muted small"></span></div>
+        <button class="sort-button" id="sort-button" title="Изменить порядок">⇅</button>
+      </div>
+      <div class="filter-pills" id="filters">
+        <button class="pill selected" data-filter="all">Все</button>
+        <button class="pill" data-filter="active">Активные</button>
+        <button class="pill" data-filter="soon">Ближайшие</button>
+      </div>
+      <section id="subscriptions-list" class="subscription-list"></section>
+      <div id="empty-state" class="empty-state hidden"><span class="empty-icon">✦</span><h3>Пока пусто</h3><p>Добавьте первую подписку — так её продление не застанет врасплох.</p><button class="primary-button" id="empty-add">Добавить подписку</button></div>
+    </section>
+
+    <section id="archive-view" class="view hidden">
+      <div class="section-heading"><div><h2>Архив</h2><span class="muted small">Подписки можно восстановить или удалить</span></div></div>
+      <section id="archive-list" class="subscription-list"></section>
+      <div id="archive-empty" class="empty-state"><span class="empty-icon">▱</span><h3>Архив пуст</h3><p>Сюда попадут завершённые подписки.</p></div>
+    </section>
+
+    <section id="settings-view" class="view hidden">
+      <div class="section-heading"><div><h2>Настройки</h2><span class="muted small">Настройте список под себя</span></div></div>
+      <div class="settings-group">
+        <div class="settings-row"><span><b>Валюта суммы</b><small>Показывается одна сумма</small></span><select id="default-currency"><option value="RUB">Рубли ₽</option><option value="USD">Доллары $</option></select></div>
+        <div class="settings-row"><span><b>Курс валюты</b><small id="settings-rate">Курс ещё не загружен</small></span><button class="outline-button" id="refresh-rate">Обновить</button></div>
+        <div class="settings-row"><span><b>Кнопка добавления</b><small>Расположение</small></span><select id="add-position"><option value="right">Справа внизу</option><option value="left">Слева внизу</option><option value="center">По центру</option></select></div>
+      </div>
+      <div class="settings-group">
+        <div class="settings-title">Поля карточки</div>
+        <label class="settings-row toggle-row"><span><b>Периодичность</b><small>Показывать на главном экране</small></span><input type="checkbox" id="show-period" checked><i></i></label>
+        <label class="settings-row toggle-row"><span><b>Комментарий</b><small>По умолчанию скрыт в списке</small></span><input type="checkbox" id="show-comment"><i></i></label>
+        <label class="settings-row toggle-row"><span><b>Иконки сервисов</b><small>Показывать логотип или значок</small></span><input type="checkbox" id="show-icons" checked><i></i></label>
+      </div>
+      <div class="settings-group">
+        <label class="settings-row toggle-row"><span><b>Уведомления</b><small>Разрешить напоминания о подписках</small></span><input type="checkbox" id="notifications-enabled" checked><i></i></label>
+        <div class="settings-row"><span><b>Данные</b><small>Сохраняются на этом устройстве</small></span><span class="badge green">Локально</span></div>
+        <div class="settings-row"><span><b>Резервная копия</b><small>Сохранить или восстановить подписки</small></span><span class="backup-actions"><button class="outline-button" id="export-data">Экспорт</button><button class="outline-button" id="import-data-button">Импорт</button><input id="import-data" type="file" accept="application/json,.json" hidden></span></div>
+      </div>
+      <p class="prototype-note">Курс обновляется раз в сутки и сохраняется на устройстве. Системные напоминания пока не подключены.</p>
+    </section>
+
+    <section id="detail-view" class="view hidden"></section>
+    <section id="form-view" class="view hidden"></section>
+
+    <nav class="tabbar" aria-label="Разделы">
+      <button class="tab active" data-tab="main"><span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="4" rx="1.5"/><rect x="4" y="10" width="16" height="4" rx="1.5"/><rect x="4" y="16" width="16" height="4" rx="1.5"/></svg></span><span class="tab-label">Подписки</span></button>
+      <button class="tab" data-tab="archive"><span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5h16v12a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5z"/><path d="M3 4h18v3.5H3zM9 11h6"/></svg></span><span class="tab-label">Архив</span></button>
+      <button class="tab" data-tab="settings"><span class="tab-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1a1.8 1.8 0 1 1-2.5 2.5l-.1-.1a1.8 1.8 0 0 0-3 .9v.2a1.8 1.8 0 1 1-3.6 0v-.2a1.8 1.8 0 0 0-3-.9l-.1.1a1.8 1.8 0 1 1-2.5-2.5l.1-.1a1.8 1.8 0 0 0-.9-3h-.2a1.8 1.8 0 1 1 0-3.6h.2a1.8 1.8 0 0 0 .9-3l-.1-.1a1.8 1.8 0 1 1 2.5-2.5l.1.1a1.8 1.8 0 0 0 3-.9v-.2a1.8 1.8 0 1 1 3.6 0v.2a1.8 1.8 0 0 0 3 .9l.1-.1a1.8 1.8 0 1 1 2.5 2.5l-.1.1a1.8 1.8 0 0 0 .9 3h.2a1.8 1.8 0 1 1 0 3.6h-.2a1.8 1.8 0 0 0-.9 3Z"/></svg></span><span class="tab-label">Настройки</span></button>
+    </nav>
+    <button class="fab" id="add-button" aria-label="Добавить подписку">＋</button>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <div id="dialog-root"></div>
+  <script src="app.js"></script>
+  <script>if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));</script>
+</body>
+</html>

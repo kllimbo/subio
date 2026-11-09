@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "Подписки — учёт расходов",
+  "short_name": "Подписки",
+  "description": "Личный список подписок и предстоящих платежей",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f6fb",
+  "theme_color": "#f5f8fd",
+  "icons": [
+    {
+      "src": "app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
